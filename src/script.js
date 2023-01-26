@@ -137,7 +137,7 @@ const tick = () => {
 
   for (let i = 0; i < count; i++) {
     //   this technique works for a small number of particles
-    // but for lots of particles, is a huge load on gpu. performance will suffer.
+    //   but for lots of particles, is a huge load on gpu. performance will suffer.
     const i3 = i * 3
     const x = particlesGeometry.attributes.position.array[i3]
     // access y axis of each particle
