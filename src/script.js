@@ -41,11 +41,14 @@ particlesGeometry.setAttribute(
   new THREE.BufferAttribute(particlesPositions, 3)
 )
 
-particlesGeometry.setAttribute('color', new THREE.BufferAttribute(particlesColors, 3))
+particlesGeometry.setAttribute(
+  'color',
+  new THREE.BufferAttribute(particlesColors, 3)
+)
 
 // Material
 const particlesMaterial = new THREE.PointsMaterial({
-//   color: new THREE.Color('#ff88cc'),
+  //   color: new THREE.Color('#ff88cc'),
   size: 0.1,
   sizeAttenuation: true,
   transparent: true,
@@ -126,11 +129,24 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 const clock = new THREE.Clock()
 
 const tick = () => {
-    const elapsedTime = clock.getElapsedTime()
-    
-    // Update Particles
-    particles.rotation.y =   elapsedTime * .02
+  const elapsedTime = clock.getElapsedTime()
 
+  // Update Particles
+  // animate all particles simultaneously
+  // particles.rotation.y =   elapsedTime * .02
+
+  for (let i = 0; i < count; i++) {
+    //   this technique works for a small number of particles
+    // but for lots of particles, is a huge load on gpu. performance will suffer.
+    const i3 = i * 3
+    const x = particlesGeometry.attributes.position.array[i3]
+    // access y axis of each particle
+    particlesGeometry.attributes.position.array[i3 + 1] = Math.sin(
+      elapsedTime + x
+    )
+  }
+  // need to tell threejs to update the position attribute in order to animate
+  particlesGeometry.attributes.position.needsUpdate = true
 
   // Update controls
   controls.update()
