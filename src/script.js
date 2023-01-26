@@ -19,37 +19,58 @@ const scene = new THREE.Scene()
  * Textures
  */
 const textureLoader = new THREE.TextureLoader()
-const particleTexture = textureLoader.load('/textures/particles/4.png')
+const particleTexture = textureLoader.load('/textures/particles/2.png')
 
 /**
  * Particles
  */
 
 const particlesGeometry = new THREE.BufferGeometry()
-const count = 5000
+const count = 20000
 
-const positions = new Float32Array(count * 3)
+const particlesPositions = new Float32Array(count * 3)
+const colors = new Float32Array(count * 3)
 
 for (let i = 0; i < count * 3; i++) {
-  positions[i] = (Math.random() - 0.5) * 10
+  particlesPositions[i] = (Math.random() - 0.5) * 10
+  colors[i] = Math.random()
 }
 
 particlesGeometry.setAttribute(
   'position',
-  new THREE.BufferAttribute(positions, 3)
+  new THREE.BufferAttribute(particlesPositions, 3)
 )
+
+particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
 
 // Material
 const particlesMaterial = new THREE.PointsMaterial({
-  color: new THREE.Color('#ff88cc'),
+//   color: new THREE.Color('#ff88cc'),
   size: 0.1,
   sizeAttenuation: true,
-  map: particleTexture,
+  transparent: true,
+  alphaMap: particleTexture,
+  //   alphaTest doesn't work too well...
+  //   alphaTest: 0.001,
+  //   depthTest can create bugs with other objects in scene
+  //   depthTest: false,
+  //   depthWrite works great with other objects in scene
+  depthWrite: false,
+  //   webGL drawls pixels on top of eachother
+  //    with blending, the two pixel's colors are added together when on top of eachother
+  blending: THREE.AdditiveBlending,
+  vertexColors: true,
 })
 
 // Points
 const particles = new THREE.Points(particlesGeometry, particlesMaterial)
 scene.add(particles)
+
+const cube = new THREE.Mesh(
+  new THREE.BoxGeometry(),
+  new THREE.MeshBasicMaterial()
+)
+// scene.add(cube)
 
 /**
  * Sizes
