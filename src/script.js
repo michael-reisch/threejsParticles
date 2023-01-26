@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
+import { RedFormat } from 'three'
 
 /**
  * Base
@@ -18,13 +19,14 @@ const scene = new THREE.Scene()
  * Textures
  */
 const textureLoader = new THREE.TextureLoader()
+const particleTexture = textureLoader.load('/textures/particles/4.png')
 
 /**
  * Particles
  */
 
 const particlesGeometry = new THREE.BufferGeometry()
-const count = 500000
+const count = 5000
 
 const positions = new Float32Array(count * 3)
 
@@ -39,8 +41,10 @@ particlesGeometry.setAttribute(
 
 // Material
 const particlesMaterial = new THREE.PointsMaterial({
-  size: 0.02,
+  color: new THREE.Color('#ff88cc'),
+  size: 0.1,
   sizeAttenuation: true,
+  map: particleTexture,
 })
 
 // Points
