@@ -29,11 +29,11 @@ const particlesGeometry = new THREE.BufferGeometry()
 const count = 20000
 
 const particlesPositions = new Float32Array(count * 3)
-const colors = new Float32Array(count * 3)
+const particlesColors = new Float32Array(count * 3)
 
 for (let i = 0; i < count * 3; i++) {
   particlesPositions[i] = (Math.random() - 0.5) * 10
-  colors[i] = Math.random()
+  particlesColors[i] = Math.random()
 }
 
 particlesGeometry.setAttribute(
@@ -41,7 +41,7 @@ particlesGeometry.setAttribute(
   new THREE.BufferAttribute(particlesPositions, 3)
 )
 
-particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+particlesGeometry.setAttribute('color', new THREE.BufferAttribute(particlesColors, 3))
 
 // Material
 const particlesMaterial = new THREE.PointsMaterial({
@@ -126,7 +126,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 const clock = new THREE.Clock()
 
 const tick = () => {
-  const elapsedTime = clock.getElapsedTime()
+    const elapsedTime = clock.getElapsedTime()
+    
+    // Update Particles
+    particles.rotation.y =   elapsedTime * .02
+
 
   // Update controls
   controls.update()
